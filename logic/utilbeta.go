@@ -8,6 +8,44 @@ import (
 	"github.com/wesovilabs/koazee"
 )
 
+// #deprecated
+// func CheckIfWoHasNewData() (bool, int, int) {
+// 	pg := db.NewPostgres().SqlDB
+// 	defer pg.Close()
+// 	var pg_woId int
+// 	sqlStatement := `SELECT wo_id FROM mes.work_orders order by wo_id desc limit 1`
+// 	err := pg.QueryRow(sqlStatement).Scan(&pg_woId)
+// 	if err != nil {
+// 		log.Printf("Unable to execute the query. %v", err)
+// 	}
+
+// 	var ifx_woId int
+// 	r := db.NewInflux().InfluxQuery(`SELECT Id FROM "workstatus" order by time desc limit 1`)
+// 	if r.Results[0].Series != nil {
+// 		res := r.Results[0].Series[0].Values //會拿到所有欄位值
+// 		for _, row := range res {
+// 			// row[0] == time
+// 			// fmt.Println("index:", i, " Id:", row[1])
+// 			// fmt.Println(reflect.TypeOf(row[1]))
+// 			id, err := row[1].(json.Number).Int64()
+// 			if err != nil {
+// 				glog.Error(err)
+// 			}
+// 			ifx_woId = int(id)
+// 			// t, err := time.Parse(time.RFC3339, row[0].(string))
+// 			// if err != nil {
+// 			// 	log.Fatal(err)
+// 			// }
+// 			// fmt.Println(reflect.TypeOf(row[1]))
+// 		}
+// 		if pg_woId > int(ifx_woId) {
+// 			return true, pg_woId, ifx_woId
+// 		}
+// 		return false, pg_woId, ifx_woId
+// 	}
+// 	glog.Error("influx no data")
+// 	return true, 0, 0
+// }
 func RemoveRepeatedElement(arr []string) (newArr []string) {
 	newArr = make([]string, 0)
 	for i := 0; i < len(arr); i++ {

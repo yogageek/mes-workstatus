@@ -1,5 +1,7 @@
 package model
 
+//定義要放入influxdb的格式
+
 type WoFields struct {
 	WoFields []WoField
 }
@@ -13,7 +15,6 @@ func (ws *WoFields) Add(w WoField) []WoField {
 
 //工單(每個工站一個)
 type WoField struct {
-	Id                     int    // serial id 123
 	Seq                    int    // wo id 1
 	WorkorderId            string //
 	Process                string // 前置工站1
@@ -24,16 +25,13 @@ type WoField struct {
 	ProcessTimePerPcs      int    // 此工項每pcs標準工時
 	CurrentStatus          string // 完成數量字串 100/300
 	StardardCompletionTime int    // qty*每pcs標準工時
-
-	// ProductId  string
-	// ProducName string
 }
 
 type WoTag struct {
 	Type           string
 	WorkorderIdTag string //要加上tag不然時間相同會被蓋掉
-	ManorderIdTag  string //
-	OrderIdTag     string // order id 78
+	ManorderIdTag  string
+	OrderIdTag     string
 }
 
 //定單

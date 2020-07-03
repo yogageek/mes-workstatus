@@ -2,10 +2,12 @@ package logic
 
 import (
 	"math"
+	"reflect"
 	"strconv"
+	"strings"
 )
 
-func TransStatusStringToInt(status string) int {
+func TransStatusStrToInt(status string) int {
 	switch status {
 	case "未進站":
 		return 0
@@ -19,17 +21,8 @@ func TransStatusStringToInt(status string) int {
 }
 
 //計算完成率
-//#1.0.1 需要加乘process time比重
-/*
-1.0.0
-良品數/制訂單總數(qty*工單數)
-1.0.1 完成時間比例
-各工單(良品數*標準完成時間)/制令單完成時間(duration欄位)
-*/
-
 func CalCompletionPct(goodqty, ngqty, totalqty int) int {
-
-	//#1.0.1 完成率只能用良品去計算
+	//完成率只能用良品去計算
 	ngqty = 0
 
 	// 返回整數百分比
@@ -46,12 +39,11 @@ func CalCompletionPct(goodqty, ngqty, totalqty int) int {
 }
 
 //計算完成率
-//#1.0.1 需要加乘process time比重
 func CalCompletionPctStr(goodqty, ngqty, totalqty int) string {
-	//#1.0.1 完成率只能用良品去計算
+	//完成率只能用良品去計算
 	ngqty = 0
 
-	// 返回字串 50/100
+	// 返回字串 ex:50/100
 	a := strconv.Itoa(goodqty + ngqty)
 	b := strconv.Itoa(totalqty)
 	c := a + "/" + b
@@ -61,4 +53,26 @@ func CalCompletionPctStr(goodqty, ngqty, totalqty int) string {
 //計算標準完成時間
 func CalStardardCompletionTime(totalqty, timeperPcs int) int {
 	return totalqty * timeperPcs
+}
+
+func Struct2MapString(obj interface{}) map[string]string {
+	t := reflect.TypeOf(obj)
+	v := reflect.ValueOf(obj)
+
+	var data = make(map[string]string)
+	for i := 0; i < t.NumField(); i++ {
+		data[t.Field(i).Name] = v.Field(i).String()
+	}
+	return data
+}
+
+func Struct2Map(obj interface{}) map[string]interface{} {
+	t := reflect.TypeOf(obj)
+	v := reflect.ValueOf(obj)
+
+	var data = make(map[string]interface{})
+	for i := 0; i < t.NumField(); i++ {
+		data[strings.ToLower(t.Field(i).Name)] = v.Field(i).Interface()
+	}
+	return data
 }

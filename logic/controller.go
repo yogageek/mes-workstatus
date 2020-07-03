@@ -30,13 +30,13 @@ func SelectPgIntoInflux() {
 		wofield.Qty = o.OrderInfo.Qty
 		wofield.GoodQty = o.State.AccGood
 		wofield.NgQty = o.State.AccNg
-		wofield.Status = TransStatusStringToInt(o.State.Status)
+		wofield.Status = TransStatusStrToInt(o.State.Status)
 		wofield.ProcessTimePerPcs = o.TakeProcessTimeFromWo()
 		wofield.StardardCompletionTime = CalStardardCompletionTime(wofield.Qty, wofield.ProcessTimePerPcs)
 		wofield.CurrentStatus = CalCompletionPctStr(wofield.GoodQty, wofield.NgQty, wofield.Qty)
 		// fmt.Printf("\n%+v\n", wofield)
 
-		tags := model.Struct2MapString(model.WoTag{
+		tags := Struct2MapString(model.WoTag{
 			Type:           "processStatus",
 			WorkorderIdTag: o.WorkorderId,
 			ManorderIdTag:  o.OrderInfo.ManorderId,
@@ -51,11 +51,6 @@ func SelectPgIntoInflux() {
 
 		//加入
 		wofields.Add(wofield)
-
-		//蒐集orderid
-		// orderid = append(orderid, field.OId)
-		// orderQty = orderQty + field.Qty
-		// orderCompletionPct = orderCompletionPct + field.CompletionPct
 	}
 
 	//制令單
@@ -71,7 +66,7 @@ func SelectPgIntoInflux() {
 		// fmt.Println(o.DueDate.Round(time.Minute))    //not work
 		// fmt.Println(o.DueDate.Truncate(time.Minute)) //not work
 
-		manordertag := model.Struct2MapString(model.ManorderTag{
+		manordertag := Struct2MapString(model.ManorderTag{
 			Type:          "manorderStatus",
 			ManorderIdTag: o.ManorderId,
 			OrderIdTag:    o.OrderId,
@@ -86,9 +81,10 @@ func SelectPgIntoInflux() {
 			ProductId:      o.ProductId,
 			ProductName:    o.ProductName,
 			PlanProduction: o.Qty,
-			OrderOEE:       CalCompletionPct(o.AccGood, o.AccNg, o.TotalQty),
+			//#1.0.1 計算增加包含 Manorder層級 時間.pcs 加權比重
+			OrderOEE: CalCompletionPct(o.WorkedTime, o.AccNg, o.RequiredTime),
 		}
-		ordertag := model.Struct2MapString(model.OrderTag{
+		ordertag := Struct2MapString(model.OrderTag{
 			Type:       "orderStatus",
 			OrderIdTag: o.OrderId,
 		})

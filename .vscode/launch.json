@@ -15,7 +15,8 @@
             "args": [
                 "--alsologtostderr",
                 // "--logtostderr",
-                "--v=5"]
+                "--v=5"
+            ]
         }
     ]
 }
