@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mes-workstatus
+spec:
+  selector:
+    matchLabels:
+      run: mes-workstatus
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: mes-workstatus
+    spec:
+      containers:
+      - name: mes-workstatus
+        image: iiicondor/mes_workstatus:1.0.1
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128M
+            ephemeral-storage: 128M
+          limits:
+            cpu: 400m
+            memory: 512M
+            ephemeral-storage: 256M
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: POSTGRES_URL
+          value: "host=10.0.1.31 port=5432 user=06e59721-0561-44c9-9518-2d6d362932dd password=rztG4y5jUnw9tzreXRqSgoci8
+          dbname=a0faaddd-e4c9-477d-8cba-94a4d79bc038 sslmode=disable"
+        - name: INFLUX_TOPIC
+          value: "workstatus"  

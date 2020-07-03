@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mes-workstatus
+spec:
+  rules:
+  - host: mes-workstatus.ifactory.eks009.en.internal
+    http:
+      paths:
+      - backend:
+          serviceName: mes-workstatus
+          servicePort: 8080
+        path: /
