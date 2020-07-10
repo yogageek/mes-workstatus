@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mes-workstatus
-        image: iiicondor/mes_workstatus:1.0.1
+        image: iiicondor/mes_workstatus:1.0.3
         imagePullPolicy: Always
         resources:
           requests:
@@ -22,9 +22,9 @@ spec:
             memory: 128M
             ephemeral-storage: 128M
           limits:
-            cpu: 400m
-            memory: 512M
-            ephemeral-storage: 256M
+            cpu: 100m
+            memory: 128M
+            ephemeral-storage: 128M
         ports:
         - containerPort: 8080
           name: http

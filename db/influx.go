@@ -17,26 +17,12 @@ const (
 	Influx_database = "mydb"
 )
 
-var Influx_topic = os.Getenv("INFLUX_TOPIC")
-
-func newInfluxConn() {
-	fmt.Println("Start")
-
-	//Influx Connection
-	conn, err := influxdb.NewHTTPClient(influxdb.HTTPConfig{
-		Addr:     Influx_addr,
-		Username: Influx_username,
-		Password: Influx_password,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Success_Conn: ", conn)
-}
+var influx_topic = os.Getenv("INFLUX_TOPIC")
+var influx_client = influxConn()
 
 func influxConn() influxdb.Client {
-	fmt.Println("Start...")
-	fmt.Println("ENV INFLUX_TOPIC=", Influx_topic)
+	fmt.Println("start influxConn...")
+	fmt.Println("ENV INFLUX_TOPIC =", influx_topic)
 
 	//Influx Connection
 	conn, err := influxdb.NewHTTPClient(influxdb.HTTPConfig{
@@ -64,7 +50,8 @@ func setBP() influxdb.BatchPoints {
 
 //Influx conn instance
 type Influx struct {
-	Conn influxdb.Client
+	Topic string
+	Conn  influxdb.Client
 }
 
 // NewInflux new influx conn instance
@@ -72,14 +59,15 @@ func NewInflux() *Influx {
 	// o:= new(influx)
 	// o.conn = getInfluxConn()
 	return &Influx{
-		Conn: influxConn(),
+		Conn:  influx_client,
+		Topic: influx_topic,
 	}
 }
 
 //InfluxInsert Influx Insert
 func (i *Influx) InfluxInsert(fields map[string]interface{}, tags map[string]string, time time.Time) {
 	bp := setBP()
-	pt, _ := influxdb.NewPoint(Influx_topic, tags, fields, time)
+	pt, _ := influxdb.NewPoint(influx_topic, tags, fields, time)
 	bp.AddPoint(pt)
 	err := i.Conn.Write(bp)
 	if err != nil {
@@ -90,8 +78,20 @@ func (i *Influx) InfluxInsert(fields map[string]interface{}, tags map[string]str
 	}
 }
 
-//InfluxQuery Influx query
-func (i *Influx) InfluxQuery(sql string) *influxdb.Response {
+func (i *Influx) InfluxQuery(sql string) []map[string]interface{} {
+	q := influxdb.Query{
+		Command:  sql,
+		Database: Influx_database,
+	}
+	res, err := i.Conn.Query(q)
+	if err != nil {
+		glog.Error(err)
+	}
+	return ParseQueryResult(res)
+}
+
+//InfluxDelete Influx query
+func (i *Influx) InfluxDelete(sql string) *influxdb.Response {
 	q := influxdb.Query{
 		Command:  sql,
 		Database: Influx_database,
@@ -105,7 +105,7 @@ func (i *Influx) InfluxQuery(sql string) *influxdb.Response {
 
 //InfluxQuery Influx query
 func (i *Influx) InfluxDrop() *influxdb.Response {
-	sql := "DROP MEASUREMENT \"" + Influx_topic + "\""
+	sql := "DROP MEASUREMENT \"" + influx_topic + "\""
 	q := influxdb.Query{
 		Command:  sql,
 		Database: Influx_database,

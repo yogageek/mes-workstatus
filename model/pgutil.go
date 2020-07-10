@@ -6,11 +6,11 @@ import (
 	"github.com/golang/glog"
 )
 
-func (w *WorkOrders) CalGoodSpendedTime() int {
-	goodqty := w.State.AccGood
-	processtime := w.TakeProcessTimeFromWo()
-	return goodqty * processtime
-}
+// func (w *WorkOrders) CalGoodSpendedTime() int {
+// 	goodqty := w.State.AccGood
+// 	processtime := w.TakeProcessTimeFromWo()
+// 	return goodqty * processtime
+// }
 
 //process time == time per pcs of this workorder
 func (w *WorkOrders) TakeProcessTimeFromWo() int {

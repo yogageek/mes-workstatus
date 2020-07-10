@@ -9,13 +9,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var pgclient = createPGClient()
+
 type Postgres struct {
 	SqlDB *sql.DB
 }
 
 func NewPostgres() *Postgres {
 	return &Postgres{
-		SqlDB: createPGClient(),
+		SqlDB: pgclient,
 	}
 }
 

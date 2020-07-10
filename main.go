@@ -2,14 +2,21 @@ package main
 
 import (
 	"fmt"
+	"mes-workstatus/db"
 	"mes-workstatus/logic"
 	"time"
 )
 
 func init() {
 	// 啟動清空influxdb
-	// ifx.InfluxDrop()
+	ifx := db.NewInflux()
+	ifx.InfluxDrop()
 }
+
+const (
+	timer1sec = 5
+	timer2sec = 10
+)
 
 func main() {
 	//make a chan first
@@ -19,25 +26,25 @@ func main() {
 		for i := 0; i < 5; i++ {
 			input <- i //put data into chan
 		}
-		input <- "v1.0.1"
+		input <- "v1.0.3"
 	}()
 
-	t1 := time.NewTimer(time.Second * 1) //這裡設幾秒 就會等幾秒
-	// t2 := time.NewTimer(time.Second * 10)
-	fmt.Println("print this line first and then...")
+	timer1 := time.NewTimer(time.Second * 3) //這裡設幾秒 就會等幾秒
+	timer2 := time.NewTimer(time.Second * 10)
+	// fmt.Println("print this line first and then...")
 
 	for {
 		select {
-		//consumer - consume the messages
 		case msg := <-input: //take data from chan
 			fmt.Println(msg) //will print helle world
-		case <-t1.C: //t1.C拿出channel
-			println("t1s timer")
+		case <-timer1.C: //t1.C拿出channel
+			println("timer1 sec...", timer1sec)
 			logic.SelectPgIntoInflux()
-			t1.Reset(time.Second * 5) //使t1重新開始計時
-			// case <-t2.C:
-			// 	println("10s timer")
-			// 	t2.Reset(time.Second * 10)
+			timer1.Reset(time.Second * timer1sec) //使t1重新開始計時
+		case <-timer2.C:
+			println("timer2 sec...", timer2sec)
+			logic.SyncPgAndInfluxForDelete()
+			timer2.Reset(time.Second * timer2sec)
 		}
 	}
 }

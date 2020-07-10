@@ -4,10 +4,9 @@ import (
 	"math"
 	"reflect"
 	"strconv"
-	"strings"
 )
 
-func TransStatusStrToInt(status string) int {
+func transStatusStrToInt(status string) int {
 	switch status {
 	case "未進站":
 		return 0
@@ -21,7 +20,7 @@ func TransStatusStrToInt(status string) int {
 }
 
 //計算完成率
-func CalCompletionPct(goodqty, ngqty, totalqty int) int {
+func calCompletionPct(goodqty, ngqty, totalqty int) int {
 	//完成率只能用良品去計算
 	ngqty = 0
 
@@ -39,7 +38,7 @@ func CalCompletionPct(goodqty, ngqty, totalqty int) int {
 }
 
 //計算完成率
-func CalCompletionPctStr(goodqty, ngqty, totalqty int) string {
+func calCompletionPctStr(goodqty, ngqty, totalqty int) string {
 	//完成率只能用良品去計算
 	ngqty = 0
 
@@ -51,11 +50,11 @@ func CalCompletionPctStr(goodqty, ngqty, totalqty int) string {
 }
 
 //計算標準完成時間
-func CalStardardCompletionTime(totalqty, timeperPcs int) int {
+func calStardardCompletionTime(totalqty, timeperPcs int) int {
 	return totalqty * timeperPcs
 }
 
-func Struct2MapString(obj interface{}) map[string]string {
+func struct2MapString(obj interface{}) map[string]string {
 	t := reflect.TypeOf(obj)
 	v := reflect.ValueOf(obj)
 
@@ -66,13 +65,22 @@ func Struct2MapString(obj interface{}) map[string]string {
 	return data
 }
 
-func Struct2Map(obj interface{}) map[string]interface{} {
-	t := reflect.TypeOf(obj)
-	v := reflect.ValueOf(obj)
+// func struct2Map(obj interface{}) map[string]interface{} {
+// 	t := reflect.TypeOf(obj)
+// 	v := reflect.ValueOf(obj)
 
-	var data = make(map[string]interface{})
-	for i := 0; i < t.NumField(); i++ {
-		data[strings.ToLower(t.Field(i).Name)] = v.Field(i).Interface()
+// 	var data = make(map[string]interface{})
+// 	for i := 0; i < t.NumField(); i++ {
+// 		data[strings.ToLower(t.Field(i).Name)] = v.Field(i).Interface()
+// 	}
+// 	return data
+// }
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
 	}
-	return data
+	return false
 }
