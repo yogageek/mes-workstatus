@@ -36,8 +36,6 @@ type WoTag struct {
 
 //定單
 type OrderField struct {
-	ProductId      string
-	ProductName    string
 	PlanProduction int //order qty
 	OrderOEE       int //order complete percentage
 }
@@ -49,7 +47,9 @@ type OrderTag struct {
 
 //制定單
 type ManorderField struct {
-	PlanProduction int    //order qty
+	PlanProduction int //order qty
+	ProductId      string
+	ProductName    string
 	OrderOEE       int    //order complete percentage
 	DueDate        string //預計完成日
 }

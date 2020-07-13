@@ -57,8 +57,6 @@ type OrderJoinWorkorder struct {
 	WorkedTime   int //GoodQty已花費時間
 	RequiredTime int //Qty共需花費時間
 	Time         time.Time
-	ProductId    string
-	ProductName  string
 }
 
 type OrderJoinManorder struct {
@@ -66,8 +64,10 @@ type OrderJoinManorder struct {
 	ManorderId   string
 	TotalQty     int //加總
 	Qty          int
-	AccGood      int       //加總
-	AccNg        int       //加總
+	AccGood      int //加總
+	AccNg        int //加總
+	ProductId    string
+	ProductName  string
 	WorkedTime   int       //GoodQty已花費時間
 	RequiredTime int       //Qty共需花費時間
 	DueDate      time.Time //制令單預計完成日

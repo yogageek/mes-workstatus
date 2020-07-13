@@ -50,7 +50,7 @@ func SelectPgIntoInflux() {
 			OrderIdTag:     o.OrderInfo.OrderId,
 		})
 
-		// 		n := int64(32)
+		// n := int64(32)
 		// str := strconv.FormatInt(n, 10)
 		// fmt.Println(str)  // Prints "32"
 		// s := strconv.FormatInt(time.Now().Unix(), 10) // s == "61" (hexadecimal)
@@ -72,6 +72,8 @@ func SelectPgIntoInflux() {
 	for _, o := range manorders {
 		manorderfield := &model.ManorderField{
 			PlanProduction: o.Qty,
+			ProductId:      o.ProductId,
+			ProductName:    o.ProductName,
 			//#1.0.1 計算增加包含 Manorder層級 時間.pcs 加權比重
 			OrderOEE: calCompletionPct(o.WorkedTime, o.AccNg, o.RequiredTime),
 			DueDate:  o.DueDate.Format("2006-01-02 15:04:05"), //一定要放這個日期才能轉 2006-01-02 15:04:05
@@ -92,8 +94,6 @@ func SelectPgIntoInflux() {
 	orders, _ := selectOrderJoinWorkorder()
 	for _, o := range orders {
 		orderfield := &model.OrderField{
-			ProductId:      o.ProductId,
-			ProductName:    o.ProductName,
 			PlanProduction: o.Qty,
 			//#1.0.1 計算增加包含 Manorder層級 時間.pcs 加權比重
 			OrderOEE: calCompletionPct(o.WorkedTime, o.AccNg, o.RequiredTime),

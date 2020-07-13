@@ -64,7 +64,7 @@ func selectOrderJoinWorkorder() ([]model.OrderJoinWorkorder, error) {
 	defer rows.Close() //if row=nil, will cause this error
 	for rows.Next() {  // iterate over the rows
 		var m model.OrderJoinWorkorder
-		err = rows.Scan(&m.Time, &m.OrderId, &m.TotalQty, &m.Qty, &m.AccGood, &m.AccNg, &m.RequiredTime, &m.WorkedTime, &m.ProductId, &m.ProductName)
+		err = rows.Scan(&m.Time, &m.OrderId, &m.TotalQty, &m.Qty, &m.AccGood, &m.AccNg, &m.RequiredTime, &m.WorkedTime)
 		if err != nil {
 			log.Printf("Unable to scan the row. %v", err)
 		}
@@ -100,7 +100,7 @@ func selectOrderJoinManorder() ([]model.OrderJoinManorder, error) {
 
 	for rows.Next() { // iterate over the rows
 		var m model.OrderJoinManorder
-		err = rows.Scan(&m.Time, &m.DueDate, &m.ManorderId, &m.OrderId, &m.TotalQty, &m.Qty, &m.RequiredTime, &m.WorkedTime, &m.AccGood, &m.AccNg)
+		err = rows.Scan(&m.Time, &m.DueDate, &m.ManorderId, &m.OrderId, &m.TotalQty, &m.Qty, &m.RequiredTime, &m.WorkedTime, &m.AccGood, &m.AccNg, &m.ProductId, &m.ProductName)
 		if err != nil {
 			log.Printf("Unable to scan the row. %v", err)
 		}
